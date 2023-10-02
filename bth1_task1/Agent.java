@@ -1,4 +1,4 @@
-package bth1;
+package bth1_task1;
 
 public class Agent {
 	private AgentProgram program;

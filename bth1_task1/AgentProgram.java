@@ -1,6 +1,6 @@
-package bth1;
+package bth1_task1;
 
-import bth1.Environment.LocationState;
+import bth1_task1.Environment.LocationState;
 
 public class AgentProgram {
 

@@ -6,7 +6,8 @@ public class TestSimpleReflexAgent {
 				Environment.LocationState.DIRTY, Environment.LocationState.CLEAN);
 		Agent agent = new Agent(new AgentProgram());
 		env.addAgent(agent, Environment.LOCATION_A);
-//còn phần action trong class AgentProgram chưa sửa
-		env.step(3);
+
+		env.step(4);
+		env.Score();
 	}
 }

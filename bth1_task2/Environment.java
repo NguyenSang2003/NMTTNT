@@ -1,9 +1,11 @@
 package bth1_task2;
 
+import java.util.Random;
+
 public class Environment {
 	public static final Action MOVE_LEFT = new DynamicAction("LEFT");
 	public static final Action MOVE_RIGHT = new DynamicAction("RIGHT");
-	public static final Action MOVE_TOP = new DynamicAction("TOP");
+	public static final Action MOVE_UP = new DynamicAction("UP");
 	public static final Action MOVE_DOWN = new DynamicAction("DOWN");
 	public static final Action SUCK_DIRT = new DynamicAction("SUCK");
 	public static final String LOCATION_A = "A";
@@ -15,8 +17,9 @@ public class Environment {
 		CLEAN, DIRTY
 	}
 
+	private int score = 0;
 	private EnvironmentState envState;
-	private boolean isDone = false;// all squares are CLEAN
+	private boolean isDone = false;
 	private Agent agent = null;
 
 	public Environment(LocationState locAState, LocationState locBState, LocationState locCState,
@@ -24,42 +27,79 @@ public class Environment {
 		envState = new EnvironmentState(locAState, locBState, locCState, locDState);
 	}
 
-	// add an agent into the enviroment
 	public void addAgent(Agent agent, String location) {
-		// TODO
 		envState.setAgentLocation(location);
-		this.agent = agent; // có this. để phân biệt agent
-							// tham số ở phương thức với agent đối tượng
+		this.agent = agent;
 	}
 
 	public EnvironmentState getCurrentState() {
 		return this.envState;
 	}
 
-	// Update enviroment state when agent do an action
-	// cập nhật tình trạng môi trường khi mà agent thực hiện 1 hành động
 	public EnvironmentState executeAction(Action action) {
-		// TODO
+		String agentLocation = envState.getAgentLocation();
+
 		if (action == SUCK_DIRT) {
-			// đặt tên cho vị trí của agent để lấy đc vị trí của nó
-			String agent = envState.getAgentLocation();
-			envState.setLocationState(agent, LocationState.CLEAN);
-		} else if (action == MOVE_RIGHT) {
-			envState.setAgentLocation(LOCATION_B);
-		} else {
-			envState.setAgentLocation(LOCATION_A);
+			envState.setLocationState(agentLocation, LocationState.CLEAN);
+			score += 500;
+
+		} else if (agentLocation.equals(Environment.LOCATION_A)) {
+			if (action == Environment.MOVE_RIGHT) {
+				envState.setAgentLocation(LOCATION_B);
+				score -= 10;
+			} else if (action == Environment.MOVE_DOWN) {
+				envState.setAgentLocation(LOCATION_C);
+				score -= 10;
+			} else {
+				envState.setAgentLocation(LOCATION_C);
+				score -= 100;
+			}
+		} else if (agentLocation.equals(Environment.LOCATION_B)) {
+			if (action == Environment.MOVE_LEFT) {
+				envState.setAgentLocation(LOCATION_A);
+				score -= 10;
+			} else if (action == Environment.MOVE_DOWN) {
+				envState.setAgentLocation(LOCATION_D);
+				score -= 10;
+			} else {
+				envState.setAgentLocation(LOCATION_B);
+				score -= 100;
+			}
+		} else if (agentLocation.equals(Environment.LOCATION_C)) {
+			if (action == Environment.MOVE_UP) {
+				envState.setAgentLocation(LOCATION_A);
+				score -= 10;
+			} else if (action == Environment.MOVE_RIGHT) {
+				envState.setAgentLocation(LOCATION_D);
+				score -= 10;
+			} else {
+				envState.setAgentLocation(LOCATION_C);
+				score -= 100;
+			}
+		} else if (agentLocation.equals(Environment.LOCATION_D)) {
+			if (action == Environment.MOVE_LEFT) {
+				envState.setAgentLocation(LOCATION_C);
+				score -= 10;
+			} else if (action == Environment.MOVE_UP) {
+				envState.setAgentLocation(LOCATION_B);
+				score -= 10;
+			} else {
+				envState.setAgentLocation(LOCATION_D);
+				score -= 100;
+			}
 		}
 		return envState;
 	}
 
-	// get percept<AgentLocation, LocationState> at the current location where agent
-	// is in.
+	// Phương thức tính điểm
+	public void Score() {
+		System.out.println("Tổng điểm: " + this.score);
+	}
+
 	public Percept getPerceptSeenBy() {
-		// TODO
 		String agentLocate = envState.getAgentLocation();
 		LocationState locateState = envState.getLocationState(agentLocate);
-		Percept p1 = new Percept(agentLocate, locateState);
-		return p1;
+		return new Percept(agentLocate, locateState);
 	}
 
 	public void step() {
@@ -71,8 +111,10 @@ public class Environment {
 		System.out.println("Agent Loc.: " + agentLocation + "\tAction: " + anAction);
 
 		if ((es.getLocationState(LOCATION_A) == LocationState.CLEAN)
-				&& (es.getLocationState(LOCATION_B) == LocationState.CLEAN))
-			isDone = true;// if both squares are clean, then agent do not need to do any action
+				&& (es.getLocationState(LOCATION_B) == LocationState.CLEAN)
+				&& (es.getLocationState(LOCATION_C) == LocationState.CLEAN)
+				&& (es.getLocationState(LOCATION_D) == LocationState.CLEAN))
+			isDone = true;
 		es.display();
 	}
 
@@ -85,7 +127,6 @@ public class Environment {
 
 	public void stepUntilDone() {
 		int i = 0;
-
 		while (!isDone) {
 			System.out.println("step: " + i++);
 			step();
