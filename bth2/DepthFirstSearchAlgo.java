@@ -26,11 +26,14 @@ public class DepthFirstSearchAlgo implements ISearchAlgo {
 			if (current.getLabel().equals(goal)) {
 				return current;
 			}
-			for (Node child : current.getChildrenNodes()) {
-				if (!visited.contains(child)) {
-					stack.push(child);
-					visited.add(child);
-					child.setParent(current);
+			for (Edge e : current.getChildren()) {
+				Node end = e.getEnd();
+				double cost = e.getWeight();
+				if (!visited.contains(end) && !stack.contains(end)) {
+					end.setPathCost(cost + current.getPathCost());
+					end.setParent(current);
+					stack.add(end);
+					visited.add(end);
 				}
 			}
 		}
@@ -59,10 +62,8 @@ public class DepthFirstSearchAlgo implements ISearchAlgo {
 					visited.clear();
 					execute(n, goal);
 				}
-
 			}
 		}
 		return null;
 	}
-
 }

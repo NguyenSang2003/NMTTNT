@@ -1,5 +1,6 @@
 package bth2;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,12 +19,12 @@ public class BreadthFirstSearchAlgo implements ISearchAlgo {
 		// Frontier cho BFS là Queue
 		Queue<Node> queue = new LinkedList<>();
 
-		// Add 1 cấu trúc dữ liệu để lưu các đỉnh đã duyệt
+		// Add cấu trúc dữ liệu để lưu các đỉnh đã duyệt
 		// List, set, ...
 		// List<Node> explored = new ArrayList<>();
 		Set<Node> visited = new HashSet<>();
 
-		queue.offer(root);// khi add sai ko gây ra ngoại lệ
+		queue.offer(root);// khi offer sai ko gây ra ngoại lệ
 		visited.add(root);
 
 		while (!queue.isEmpty()) {
@@ -34,15 +35,17 @@ public class BreadthFirstSearchAlgo implements ISearchAlgo {
 				return current;
 			}
 
-			// Add mấy đỉnh mà chưa duyệt được qua
-			for (Node child : current.getChildrenNodes()) {
-				if (!visited.contains(child)) {
-					queue.offer(child);
-					visited.add(child);
+			for (Edge e : current.getChildren()) {
+				Node end = e.getEnd();
+				double cost = e.getWeight();
+				if (!visited.contains(end) && !queue.contains(end)) {
+					end.setPathCost(cost + current.getPathCost());
+					end.setParent(current);
+					queue.add(end);
+					visited.add(end);
 				}
 			}
 		}
-
 		return null;
 	}
 
@@ -67,7 +70,6 @@ public class BreadthFirstSearchAlgo implements ISearchAlgo {
 					visited.clear();
 					execute(n, goal);
 				}
-
 			}
 		}
 		return null;

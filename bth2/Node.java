@@ -93,19 +93,19 @@ public class Node implements Comparable<Node> {
 		return true;
 	}
 
-//	@Override
-//	public String toString() {
-//		return this.label + "_" + this.parent.getLabel() + " " + this.pathCost;
-//	}
-
 	@Override
 	public String toString() {
-		if (this.parent != null) {
-			return this.label + "_" + this.parent.getLabel() + " " + this.pathCost;
-		} else {
-			return this.label + " " + this.pathCost;
-		}
+		return this.label + "_" + this.parent.getLabel() + " " + this.pathCost;
 	}
+
+//	@Override
+//	public String toString() {
+//		if (this.parent != null) {
+//			return this.label + "_" + this.parent.getLabel() + " " + this.pathCost;
+//		} else {
+//			return this.label + " " + this.pathCost;
+//		}
+//	}
 
 	@Override
 	public int compareTo(Node o) {

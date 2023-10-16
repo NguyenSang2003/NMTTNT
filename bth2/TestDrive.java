@@ -30,8 +30,12 @@ public class TestDrive {
 		ISearchAlgo algo2 = new DepthFirstSearchAlgo();
 		Node result2 = algo2.execute(nodeS, "G");
 
+		ISearchAlgo alog3 = new UniformCostSearchAlgo();
+		Node result3 = alog3.execute(nodeS, "G");
+
 		System.out.println(result);
 		System.out.println(result2);
+		System.out.println(result3);
 
 	}
 }
